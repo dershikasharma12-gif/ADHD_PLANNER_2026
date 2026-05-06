@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADHD Life Planner — by PRODUCTIVITYENGINECO</title>
+<meta name="description" content="A calm, ADHD-friendly daily planner. Three priorities, focus timer, habit tracker, mood log — all in one private offline tool.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage:#6BA08A; --sage-d:#4A7A6A; --sage-l:#E4F0EB; --sage-m:#A8CBBF;
+  --lav:#8B80BF; --lav-d:#6558A0; --lav-l:#EEEAF8; --lav-m:#C0BAE5;
+  --peach:#CE8470; --peach-d:#A86250; --peach-l:#FAF0EB; --peach-m:#E8B4A0;
+  --amber:#C49550; --amber-l:#FDF3E3; --amber-m:#EAC98A;
+  --teal:#5B9BAA; --teal-l:#E3F2F5;
+  --cream:#F4F1E8; --white:#FFFFFF;
+  --text:#2E2C27; --text-mid:#6A6660; --text-soft:#9C9890;
+  --border:#E8E4DC; --border-med:#D8D3C8;
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px;
+  --sh-sm:0 2px 8px rgba(46,44,39,.06); --sh-md:0 4px 20px rgba(46,44,39,.09);
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:'Nunito',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+.app-header { background:var(--white); border-bottom:1px solid var(--border); padding:0 24px; position:sticky; top:0; z-index:100; box-shadow:var(--sh-sm); }
+.header-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:62px; }
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-icon { width:34px; height:34px; background:linear-gradient(135deg,var(--sage),var(--lav)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; }
+.logo-text { font-size:16px; font-weight:900; color:var(--text); letter-spacing:-.3px; }
+.logo-sub { font-size:10px; color:var(--text-soft); font-weight:700; margin-top:-1px; letter-spacing:1.2px; text-transform:uppercase; }
+.header-right { display:flex; align-items:center; gap:12px; }
+.date-display { font-family:'Caveat',cursive; font-size:17px; color:var(--text-mid); font-weight:500; }
+.print-btn { font-size:12px; font-weight:700; color:var(--sage-d); border:1.5px solid var(--sage-m); background:var(--sage-l); border-radius:20px; padding:6px 14px; cursor:pointer; transition:all .2s; font-family:'Nunito',sans-serif; }
+.print-btn:hover { background:var(--sage-m); }
+.help-btn { font-size:12px; font-weight:700; color:var(--lav-d); border:1.5px solid var(--lav-m); background:var(--lav-l); border-radius:20px; padding:6px 12px; cursor:pointer; font-family:'Nunito',sans-serif; }
+.help-btn:hover { background:var(--lav-m); color:#fff; }
+
+.tab-nav { background:var(--white); border-bottom:1px solid var(--border); position:sticky; top:62px; z-index:99; }
+.tab-nav-inner { max-width:900px; margin:0 auto; display:flex; padding:0 24px; overflow-x:auto; gap:2px; scrollbar-width:none; }
+.tab-nav-inner::-webkit-scrollbar { display:none; }
+.nav-tab { font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:700; padding:14px 18px; border:none; background:none; cursor:pointer; color:var(--text-mid); border-bottom:3px solid transparent; white-space:nowrap; letter-spacing:.2px; transition:all .2s; }
+.nav-tab:hover { color:var(--text); }
+.nav-tab.active { color:var(--sage-d); border-bottom-color:var(--sage); }
+.nav-tab.active.peach { color:var(--peach-d); border-bottom-color:var(--peach); }
+.nav-tab.active.lav { color:var(--lav-d); border-bottom-color:var(--lav); }
+.nav-tab.active.amber { color:var(--amber); border-bottom-color:var(--amber); }
+.nav-tab.active.teal { color:var(--teal); border-bottom-color:var(--teal); }
+
+.page { display:none; max-width:900px; margin:0 auto; padding:28px 20px 60px; }
+.page.active { display:block; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media(max-width:640px) { .two-col,.three-col { grid-template-columns:1fr; } }
+
+.card { background:var(--white); border:1px solid var(--border); border-radius:var(--r-lg); padding:22px; margin-bottom:18px; box-shadow:var(--sh-sm); }
+.card.sage-card { background:var(--sage-l); border-color:var(--sage-m); }
+.card.lav-card { background:var(--lav-l); border-color:var(--lav-m); }
+.card.peach-card { background:var(--peach-l); border-color:var(--peach-m); }
+.card.amber-card { background:var(--amber-l); border-color:var(--amber-m); }
+.card-label { font-size:10px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-soft); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.card-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.page-hero { text-align:center; padding:8px 0 28px; }
+.page-hero h1 { font-family:'Caveat',cursive; font-size:38px; font-weight:700; color:var(--text); line-height:1.1; }
+.page-hero p { font-size:14px; color:var(--text-mid); margin-top:6px; font-weight:500; }
+.section-title { font-size:17px; font-weight:800; color:var(--text); margin-bottom:6px; }
+.section-sub { font-size:13px; color:var(--text-mid); margin-bottom:18px; line-height:1.55; }
+input[type=text], input[type=date], textarea {
+  font-family:'Nunito',sans-serif; font-size:14px; border:1.5px solid var(--border); border-radius:var(--r-sm);
+  padding:10px 14px; outline:none; color:var(--text); width:100%; background:var(--white); transition:border-color .2s;
+}
+input[type=text]:focus, textarea:focus { border-color:var(--sage); box-shadow:0 0 0 3px var(--sage-l); }
+textarea { resize:vertical; min-height:90px; line-height:1.65; }
+.caveat-input { font-family:'Caveat',cursive !important; font-size:19px !important; border:none !important; border-bottom:2px dashed var(--border-med) !important; border-radius:0 !important; padding:4px 0 !important; background:transparent !important; box-shadow:none !important; }
+.caveat-input:focus { border-bottom-color:var(--sage) !important; box-shadow:none !important; }
+
+.qs-hero { background:linear-gradient(135deg,#6BA08A 0%,#8B80BF 100%); border-radius:var(--r-xl); padding:36px 32px; color:#fff; text-align:center; margin-bottom:24px; }
+.qs-hero h1 { font-family:'Caveat',cursive; font-size:40px; font-weight:700; margin-bottom:6px; }
+.qs-hero p { font-size:15px; opacity:.9; font-weight:500; }
+.promise-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:24px; }
+@media(max-width:640px) { .promise-row { grid-template-columns:1fr; } }
+.promise-card { background:var(--white); border-radius:var(--r-md); padding:16px 14px; text-align:center; border:1px solid var(--border); }
+.promise-icon { font-size:26px; margin-bottom:8px; }
+.promise-label { font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); margin-bottom:4px; }
+.promise-val { font-size:14px; font-weight:700; color:var(--text); line-height:1.35; }
+.promise-card.p-sage { border-top:3px solid var(--sage); }
+.promise-card.p-peach { border-top:3px solid var(--peach); }
+.promise-card.p-lav { border-top:3px solid var(--lav); }
+.steps-row { display:flex; flex-direction:column; gap:14px; }
+.step-item { display:flex; gap:16px; align-items:flex-start; padding:18px; background:var(--white); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--sh-sm); }
+.step-num { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; flex-shrink:0; }
+.sn-peach { background:var(--peach); }
+.sn-sage { background:var(--sage); }
+.sn-lav { background:var(--lav); }
+.step-content { flex:1; }
+.step-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:4px; }
+.step-hint { font-size:12.5px; color:var(--text-mid); margin-bottom:10px; }
+.qs-task-input { font-family:'Nunito',sans-serif; font-size:14px; border:2px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; outline:none; color:var(--text); width:100%; transition:border-color .2s; }
+.qs-task-input:focus { border-color:var(--peach); box-shadow:0 0 0 3px var(--peach-l); }
+.qs-timer-display { text-align:center; padding:14px 0; }
+.qs-time { font-family:'Caveat',cursive; font-size:64px; font-weight:700; color:var(--peach-d); line-height:1; }
+.qs-time-lbl { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); margin-top:3px; }
+.big-btn { display:block; width:100%; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; padding:15px; border-radius:var(--r-md); border:none; cursor:pointer; transition:all .2s; letter-spacing:.4px; }
+.btn-peach { background:var(--peach); color:#fff; }
+.btn-peach:hover { background:var(--peach-d); transform:translateY(-1px); }
+.btn-peach:disabled { background:var(--peach-m); cursor:default; transform:none; }
+.btn-sage { background:var(--sage); color:#fff; }
+.btn-sage:hover { background:var(--sage-d); transform:translateY(-1px); }
+.win-celebration { background:var(--sage-l); border:2px solid var(--sage); border-radius:var(--r-md); padding:18px; text-align:center; display:none; }
+.win-celebration.show { display:block; animation:popIn .4s cubic-bezier(.34,1.56,.64,1); }
+.win-cel-h { font-family:'Caveat',cursive; font-size:26px; font-weight:700; color:var(--sage-d); }
+.win-cel-t { font-size:13px; color:var(--sage-d); margin-top:4px; font-weight:600; }
+
+.daily-top { display:grid; grid-template-columns:1fr auto; gap:16px; align-items:start; margin-bottom:18px; }
+.mood-quick { display:flex; gap:6px; padding-top:4px; }
+.mood-q-btn { font-size:20px; width:38px; height:38px; border-radius:10px; border:2px solid var(--border); background:var(--white); cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; }
+.mood-q-btn.sel { border-color:var(--sage); background:var(--sage-l); transform:scale(1.1); }
+.water-section { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+.water-label { font-size:11px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--text-soft); }
+.drops { display:flex; gap:6px; }
+.drop { cursor:pointer; transition:transform .15s; }
+.drop:hover { transform:scale(1.2); }
+.drop svg path { fill:var(--border); transition:fill .25s; }
+.drop.filled svg path { fill:var(--sage); }
+.priority-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.priority-item:last-child { border-bottom:none; }
+.p-badge { width:26px; height:26px; border-radius:50%; font-size:12px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pb-1 { background:var(--peach-l); color:var(--peach-d); }
+.pb-2 { background:var(--amber-l); color:var(--amber); }
+.pb-3 { background:var(--sage-l); color:var(--sage-d); }
+.check-box { width:24px; height:24px; border-radius:7px; border:2px solid var(--border-med); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .22s; flex-shrink:0; background:var(--white); }
+.check-box:hover { border-color:var(--sage); }
+.check-box.done { background:var(--sage); border-color:var(--sage); }
+.check-box.done::after { content:''; display:block; width:12px; height:7px; border-left:2.5px solid #fff; border-bottom:2.5px solid #fff; transform:rotate(-45deg) translateY(-1px); }
+.p-text { flex:1; font-size:14.5px; border:none; background:transparent; outline:none; font-family:'Nunito',sans-serif; color:var(--text); font-weight:600; padding:2px 0; }
+.p-text::placeholder { font-weight:400; color:var(--text-soft); }
+.p-text.done { text-decoration:line-through; color:var(--text-soft); font-weight:400; }
+.time-grid { display:grid; grid-template-columns:52px 1fr; gap:0; }
+.time-label { font-size:11px; font-weight:700; color:var(--text-soft); padding:8px 10px 8px 0; text-align:right; border-right:2px solid var(--border); display:flex; align-items:center; justify-content:flex-end; line-height:1; }
+.time-block { min-height:38px; border-bottom:1px solid var(--border); padding:6px 12px; display:flex; align-items:center; }
+.time-block:last-child { border-bottom:none; }
+.time-block input { border:none; background:transparent; font-family:'Nunito',sans-serif; font-size:13.5px; color:var(--text); outline:none; width:100%; }
+.time-block input::placeholder { color:var(--text-soft); }
+.time-block.focus-block { background:rgba(107,160,138,.07); }
+.time-block.break-block { background:rgba(196,149,80,.07); }
+.block-tag { font-size:9px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; padding:2px 7px; border-radius:10px; margin-left:auto; white-space:nowrap; }
+.bt-focus { background:var(--sage-m); color:var(--sage-d); }
+.bt-break { background:var(--amber-m); color:var(--amber); }
+.win-star { display:flex; align-items:center; gap:10px; padding:8px 0; }
+.win-star:not(:last-child) { border-bottom:1px dashed var(--border); }
+.star-dot { width:20px; height:20px; border-radius:50%; background:var(--amber-l); border:1.5px solid var(--amber-m); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+
+.habit-grid-header { display:grid; grid-template-columns:130px repeat(7,1fr); gap:5px; margin-bottom:8px; }
+.day-head { text-align:center; font-size:10.5px; font-weight:800; color:var(--text-soft); letter-spacing:.3px; }
+.habit-row { display:grid; grid-template-columns:130px repeat(7,1fr); gap:5px; margin-bottom:8px; align-items:center; }
+.habit-name-input { font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; border:none; border-bottom:1.5px dashed var(--border-med); background:transparent; outline:none; color:var(--text); width:100%; padding-bottom:2px; }
+.habit-name-input:focus { border-bottom-color:var(--sage); }
+.h-cell { display:flex; align-items:center; justify-content:center; }
+.h-check { width:30px; height:30px; border-radius:9px; border:2px solid var(--border-med); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.h-check:hover { border-color:var(--sage); background:var(--sage-l); }
+.h-check.done { background:var(--sage); border-color:var(--sage); }
+.h-check.done::after { content:''; display:block; width:13px; height:8px; border-left:2.5px solid #fff; border-bottom:2.5px solid #fff; transform:rotate(-45deg) translateY(-1px); }
+.habit-streak-bar { height:5px; border-radius:3px; background:var(--border); margin-top:3px; overflow:hidden; }
+.habit-streak-fill { height:100%; border-radius:3px; background:var(--sage); transition:width .5s ease; }
+.habit-streak-lbl { font-size:10px; color:var(--text-soft); font-weight:700; text-align:right; margin-top:2px; }
+.add-habit-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:11px; background:transparent; border:2px dashed var(--sage-m); border-radius:var(--r-md); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; color:var(--sage-d); cursor:pointer; transition:all .2s; margin-top:10px; }
+.add-habit-btn:hover { background:var(--sage-l); }
+
+.mood-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.mood-opt { text-align:center; padding:14px 6px; border-radius:var(--r-md); border:2px solid var(--border); background:var(--white); cursor:pointer; transition:all .2s; }
+.mood-opt:hover { border-color:var(--lav-m); transform:translateY(-2px); }
+.mood-opt.active { border-color:var(--lav); background:var(--lav-l); box-shadow:0 0 0 3px rgba(139,128,191,.1); }
+.mood-emoji { font-size:28px; display:block; margin-bottom:5px; }
+.mood-word { font-size:11px; font-weight:700; color:var(--text-mid); }
+.energy-row { display:flex; align-items:center; gap:14px; padding:8px 0; }
+.energy-lbl { font-size:12px; font-weight:800; color:var(--text-mid); white-space:nowrap; }
+.energy-track { flex:1; height:12px; border-radius:6px; background:var(--border); cursor:pointer; position:relative; overflow:hidden; }
+.energy-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--sage-m),var(--sage)); transition:width .25s; }
+.energy-val { font-size:15px; font-weight:900; color:var(--sage-d); min-width:26px; text-align:right; }
+.tag-cloud { display:flex; flex-wrap:wrap; gap:8px; }
+.tag-pill { font-size:12px; font-weight:700; padding:6px 13px; border-radius:20px; border:1.5px solid var(--border); cursor:pointer; transition:all .2s; background:var(--white); color:var(--text-mid); }
+.tag-pill:hover { border-color:var(--lav-m); }
+.tag-pill.on { border-color:var(--lav); background:var(--lav-l); color:var(--lav-d); }
+
+.timer-card { text-align:center; padding:28px 20px; }
+.timer-modes { display:flex; gap:8px; justify-content:center; margin-bottom:28px; flex-wrap:wrap; }
+.mode-btn { font-family:'Nunito',sans-serif; font-size:12px; font-weight:800; padding:8px 18px; border-radius:20px; border:2px solid var(--border); background:var(--white); cursor:pointer; color:var(--text-mid); transition:all .2s; }
+.mode-btn.active { background:var(--teal-l); border-color:var(--teal); color:var(--teal); }
+.ring-wrap { position:relative; width:180px; height:180px; margin:0 auto 24px; }
+.ring-wrap svg { transform:rotate(-90deg); }
+.ring-bg { fill:none; stroke:var(--border); stroke-width:10; }
+.ring-fg { fill:none; stroke:var(--teal); stroke-width:10; stroke-linecap:round; transition:stroke-dashoffset .6s ease; }
+.timer-center { position:absolute; top:50%;left:50%; transform:translate(-50%,-50%); text-align:center; }
+.timer-time { font-family:'Caveat',cursive; font-size:54px; font-weight:700; color:var(--text); line-height:1; }
+.timer-mode-lbl { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); margin-top:3px; }
+.timer-btns { display:flex; gap:10px; justify-content:center; }
+.t-btn { font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; padding:12px 28px; border-radius:var(--r-md); border:2px solid transparent; cursor:pointer; transition:all .2s; letter-spacing:.3px; }
+.t-start { background:var(--teal); color:#fff; border-color:var(--teal); }
+.t-start:hover { background:#4A8090; }
+.t-reset { background:var(--white); color:var(--teal); border-color:var(--teal); }
+.t-reset:hover { background:var(--teal-l); }
+.session-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.session-dot { width:10px; height:10px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+.session-txt { font-size:13px; color:var(--text); font-weight:600; flex:1; }
+.session-time { font-size:11px; color:var(--text-soft); font-weight:700; }
+.no-sessions { text-align:center; color:var(--text-soft); font-size:13px; padding:24px; font-style:italic; }
+
+.proof-hero { background:linear-gradient(135deg,var(--lav) 0%,var(--sage) 100%); border-radius:var(--r-xl); padding:32px 28px; color:#fff; text-align:center; margin-bottom:24px; }
+.proof-hero h1 { font-family:'Caveat',cursive; font-size:38px; font-weight:700; margin-bottom:4px; }
+.proof-hero p { font-size:14px; opacity:.9; font-weight:500; }
+.stat-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+@media(max-width:640px) { .stat-grid { grid-template-columns:1fr 1fr; } }
+.stat-card { background:var(--white); border-radius:var(--r-md); padding:18px 16px; text-align:center; border:1px solid var(--border); }
+.stat-num { font-family:'Caveat',cursive; font-size:40px; font-weight:700; line-height:1; }
+.stat-lbl { font-size:10px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--text-soft); margin-top:5px; }
+.sn-teal { color:var(--sage-d); } .sn-peach { color:var(--peach-d); } .sn-lav { color:var(--lav-d); } .sn-amber { color:var(--amber); }
+.week-bar-wrap { margin-bottom:8px; }
+.week-bar-info { display:flex; justify-content:space-between; margin-bottom:6px; }
+.week-bar-lbl { font-size:13px; font-weight:700; color:var(--text); }
+.week-bar-val { font-family:'Caveat',cursive; font-size:18px; font-weight:700; color:var(--sage-d); }
+.week-bar { height:12px; border-radius:6px; background:var(--border); overflow:hidden; }
+.week-bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--sage-m),var(--sage)); transition:width .6s ease; }
+.feed-list { display:flex; flex-direction:column; }
+.feed-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.feed-item:last-child { border-bottom:none; }
+.feed-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.feed-text { font-size:13.5px; font-weight:600; color:var(--text); flex:1; }
+.feed-time { font-size:11px; color:var(--text-soft); font-weight:700; white-space:nowrap; }
+.empty-feed { text-align:center; color:var(--text-soft); font-size:13px; padding:28px 0; font-style:italic; line-height:1.65; }
+.share-btn { display:block; width:100%; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; padding:13px; border-radius:var(--r-md); border:2px dashed var(--lav-m); background:var(--lav-l); color:var(--lav-d); cursor:pointer; margin-top:14px; transition:all .2s; }
+.share-btn:hover { background:var(--lav-m); }
+.danger-btn { display:block; width:100%; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; padding:11px; border-radius:var(--r-md); border:1.5px solid var(--border-med); background:var(--white); color:var(--text-soft); cursor:pointer; margin-top:10px; transition:all .2s; }
+.danger-btn:hover { color:var(--peach-d); border-color:var(--peach-m); }
+
+.app-footer { background:var(--white); border-top:1px solid var(--border); text-align:center; padding:16px; font-size:12px; color:var(--text-soft); font-weight:500; }
+.app-footer strong { color:var(--text-mid); font-weight:800; letter-spacing:.5px; }
+
+.confetti-piece { position:fixed; pointer-events:none; border-radius:3px; animation:confettiFall 1.4s ease-in forwards; z-index:200; }
+@keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1} 100%{transform:translateY(90vh) rotate(800deg) scale(.5);opacity:0} }
+@keyframes popIn { 0%{transform:scale(.7);opacity:0} 100%{transform:scale(1);opacity:1} }
+
+/* Welcome modal */
+.modal-bg { position:fixed; inset:0; background:rgba(46,44,39,.55); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; animation:popIn .25s ease; }
+.modal-bg.show { display:flex; }
+.modal { background:var(--white); border-radius:var(--r-xl); max-width:520px; width:100%; padding:32px; box-shadow:var(--sh-md); max-height:90vh; overflow-y:auto; }
+.modal h2 { font-family:'Caveat',cursive; font-size:34px; color:var(--text); margin-bottom:6px; }
+.modal .modal-sub { font-size:14px; color:var(--text-mid); margin-bottom:18px; font-weight:500; }
+.modal ul { list-style:none; margin:14px 0; }
+.modal li { padding:10px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text); display:flex; gap:10px; align-items:flex-start; }
+.modal li:last-child { border-bottom:none; }
+.modal li .li-icon { font-size:18px; flex-shrink:0; }
+.modal-foot { font-size:12px; color:var(--text-soft); background:var(--cream); padding:12px 14px; border-radius:var(--r-md); margin:14px 0 18px; line-height:1.55; }
+
+@media print {
+  .app-header,.tab-nav,.app-footer,.modal-bg { display:none !important; }
+  .page { display:block !important; break-before:page; padding:20px; }
+  .page:first-of-type { break-before:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome modal (first visit) -->
+<div class="modal-bg" id="welcome-modal">
+  <div class="modal">
+    <h2>Welcome to your ADHD Life Planner 🌿</h2>
+    <div class="modal-sub">A calm productivity system by PRODUCTIVITYENGINECO</div>
+    <ul>
+      <li><span class="li-icon">⚡</span><div><strong>Start Here</strong> — pick one tiny task, run a 5-minute timer, get your first win.</div></li>
+      <li><span class="li-icon">📋</span><div><strong>Today</strong> — three priorities, hydration, time blocks, brain dump.</div></li>
+      <li><span class="li-icon">✓</span><div><strong>Habits</strong> — track 5 daily habits across the week.</div></li>
+      <li><span class="li-icon">💜</span><div><strong>Mood</strong> — log how you feel and what's affecting you.</div></li>
+      <li><span class="li-icon">⏱</span><div><strong>Focus</strong> — ADHD-friendly Pomodoro timer.</div></li>
+      <li><span class="li-icon">★</span><div><strong>My Proof</strong> — visible streaks proving you're showing up.</div></li>
+    </ul>
+    <div class="modal-foot">
+      🔒 <strong>Your data is private.</strong> Everything saves only to your device — no accounts, no servers, no tracking. Bookmark this file and reopen it anytime.
+    </div>
+    <button class="big-btn btn-sage" onclick="closeWelcome()">Let's go →</button>
+  </div>
+</div>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🧠</div>
+      <div>
+        <div class="logo-text">ADHD Life Planner</div>
+        <div class="logo-sub">PRODUCTIVITYENGINECO</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="date-display" id="header-date"></div>
+      <button class="help-btn" onclick="openWelcome()">? Help</button>
+      <button class="print-btn" onclick="window.print()">⎙ Print</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="nav-tab active peach" data-tab="start" onclick="switchTab('start',this)">⚡ Start Here</button>
+    <button class="nav-tab" data-tab="daily" onclick="switchTab('daily',this)">📋 Today</button>
+    <button class="nav-tab amber" data-tab="habits" onclick="switchTab('habits',this)">✓ Habits</button>
+    <button class="nav-tab lav" data-tab="mood" onclick="switchTab('mood',this)">💜 Mood</button>
+    <button class="nav-tab teal" data-tab="focus" onclick="switchTab('focus',this)">⏱ Focus</button>
+    <button class="nav-tab lav" data-tab="proof" onclick="switchTab('proof',this)">★ My Proof</button>
+  </div>
+</nav>
+
+<!-- ─── START HERE ─── -->
+<main id="start" class="page active">
+  <div class="qs-hero">
+    <h1>You've got this today 🌿</h1>
+    <p>One tiny task. Five minutes. Your first win of the day.</p>
+  </div>
+  <div class="promise-row">
+    <div class="promise-card p-peach">
+      <div class="promise-icon">🎯</div>
+      <div class="promise-label">Outcome</div>
+      <div class="promise-val">Finish your top 3 tasks — every single day</div>
+    </div>
+    <div class="promise-card p-sage">
+      <div class="promise-icon">⚡</div>
+      <div class="promise-label">First Win</div>
+      <div class="promise-val">One dopamine hit in under 5 minutes, guaranteed</div>
+    </div>
+    <div class="promise-card p-lav">
+      <div class="promise-icon">📊</div>
+      <div class="promise-label">Proof</div>
+      <div class="promise-val">A visible streak that shows you're showing up</div>
+    </div>
+  </div>
+  <div class="steps-row">
+    <div class="step-item">
+      <div class="step-num sn-peach">1</div>
+      <div class="step-content">
+        <div class="step-title">Name one small task</div>
+        <div class="step-hint">Not your to-do list. Not everything. Just the tiniest thing you can finish in 5 minutes.</div>
+        <input class="qs-task-input" id="qs-input" placeholder="e.g. Send one email, drink a glass of water, write 3 sentences..." oninput="checkQs()">
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num sn-sage">2</div>
+      <div class="step-content">
+        <div class="step-title">Start the 5-minute timer</div>
+        <div class="step-hint">That's the whole commitment. When the timer ends — you've already won.</div>
+        <div class="qs-timer-display" id="qs-timer" style="display:none">
+          <div class="qs-time" id="qs-time">05:00</div>
+          <div class="qs-time-lbl">Seconds left — you're doing it</div>
+        </div>
+        <button class="big-btn btn-peach" id="qs-btn" onclick="startQs()" disabled>Start my 5-minute win →</button>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num sn-lav">3</div>
+      <div class="step-content">
+        <div class="step-title">Celebrate your win</div>
+        <div class="step-hint">Every win you log builds your Proof Dashboard — visible evidence that you're showing up.</div>
+        <div class="win-celebration" id="qs-win">
+          <div class="win-cel-h">🎉 First win logged!</div>
+          <div class="win-cel-t">Head to ★ My Proof to see it stacking up.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ─── DAILY PLANNER ─── -->
+<main id="daily" class="page">
+  <div class="page-hero">
+    <h1>Today's planner</h1>
+    <p>Three priorities. Nothing more. That's the whole plan.</p>
+  </div>
+
+  <div class="card">
+    <div class="daily-top">
+      <div>
+        <div class="card-label">Date & Intention</div>
+        <input class="caveat-input" id="date-field" style="width:100%;font-size:21px" placeholder="Monday, April 20">
+        <input class="caveat-input" id="intention-field" style="width:100%;margin-top:12px" placeholder="Today I intend to...">
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px">Mood</div>
+        <div class="mood-quick" id="mood-quick">
+          <button class="mood-q-btn" data-mood="0" onclick="qMood(this)">😊</button>
+          <button class="mood-q-btn" data-mood="1" onclick="qMood(this)">😐</button>
+          <button class="mood-q-btn" data-mood="2" onclick="qMood(this)">😔</button>
+        </div>
+      </div>
+    </div>
+    <div class="water-section">
+      <span class="water-label">Hydration</span>
+      <div class="drops" id="drops"></div>
+      <span style="font-size:12px;color:var(--text-soft);font-weight:600" id="water-count">0 / 8 glasses</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Top 3 Priorities — the only things that count today</div>
+    <div id="priorities">
+      <div class="priority-item">
+        <div class="p-badge pb-1">1</div>
+        <div class="check-box" data-pri="0" onclick="togglePriority(this)"></div>
+        <input class="p-text" data-pri-text="0" placeholder="Most important task...">
+      </div>
+      <div class="priority-item">
+        <div class="p-badge pb-2">2</div>
+        <div class="check-box" data-pri="1" onclick="togglePriority(this)"></div>
+        <input class="p-text" data-pri-text="1" placeholder="Second priority...">
+      </div>
+      <div class="priority-item">
+        <div class="p-badge pb-3">3</div>
+        <div class="check-box" data-pri="2" onclick="togglePriority(this)"></div>
+        <input class="p-text" data-pri-text="2" placeholder="Third priority...">
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-label">Time Blocks</div>
+      <div class="time-grid" id="time-grid"></div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-label">Brain Dump</div>
+        <textarea id="brain-dump" placeholder="Whatever is swirling in your head right now — dump it here. No judgement. Just get it out so your brain can breathe."></textarea>
+      </div>
+      <div class="card">
+        <div class="card-label">Today's Wins</div>
+        <div class="win-star"><div class="star-dot">⭐</div><input class="caveat-input" data-win="0" placeholder="One thing I'm proud of..."></div>
+        <div class="win-star" style="margin-top:8px"><div class="star-dot">⭐</div><input class="caveat-input" data-win="1" placeholder="I showed up by..."></div>
+        <div class="win-star" style="margin-top:8px"><div class="star-dot">⭐</div><input class="caveat-input" data-win="2" placeholder="Tomorrow I'll try..."></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ─── HABITS ─── -->
+<main id="habits" class="page">
+  <div class="page-hero">
+    <h1>Weekly Habit Tracker</h1>
+    <p>Small, consistent actions. That's what ADHD success looks like.</p>
+  </div>
+  <div class="card">
+    <div class="card-label">This Week — tap each day you showed up</div>
+    <div class="habit-grid-header">
+      <div></div>
+      <div class="day-head">Mon</div><div class="day-head">Tue</div><div class="day-head">Wed</div>
+      <div class="day-head">Thu</div><div class="day-head">Fri</div><div class="day-head">Sat</div><div class="day-head">Sun</div>
+    </div>
+    <div id="habit-list"></div>
+    <button class="add-habit-btn" onclick="addHabit()">+ Add your own habit</button>
+  </div>
+  <div class="card">
+    <div class="card-label">Week at a glance</div>
+    <div id="habit-progress"></div>
+  </div>
+</main>
+
+<!-- ─── MOOD ─── -->
+<main id="mood" class="page">
+  <div class="page-hero">
+    <h1>Mood & Energy</h1>
+    <p>Understanding your patterns is your superpower.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-label">How are you feeling?</div>
+        <div class="mood-grid" id="mood-grid">
+          <div class="mood-opt" data-mood="Awful" onclick="selMood(this,'Awful')"><span class="mood-emoji">😩</span><span class="mood-word">Awful</span></div>
+          <div class="mood-opt" data-mood="Low" onclick="selMood(this,'Low')"><span class="mood-emoji">😞</span><span class="mood-word">Low</span></div>
+          <div class="mood-opt" data-mood="Okay" onclick="selMood(this,'Okay')"><span class="mood-emoji">😐</span><span class="mood-word">Okay</span></div>
+          <div class="mood-opt" data-mood="Good" onclick="selMood(this,'Good')"><span class="mood-emoji">🙂</span><span class="mood-word">Good</span></div>
+          <div class="mood-opt" data-mood="Great" onclick="selMood(this,'Great')"><span class="mood-emoji">🤩</span><span class="mood-word">Great</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Energy Level</div>
+        <div class="energy-row">
+          <span class="energy-lbl">Empty</span>
+          <div class="energy-track" id="energy-track" onclick="setEnergy(event)">
+            <div class="energy-fill" id="energy-fill" style="width:50%"></div>
+          </div>
+          <span class="energy-lbl">Full</span>
+          <span class="energy-val" id="energy-val">5</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-label">What's affecting you today?</div>
+        <div class="tag-cloud" id="tag-cloud">
+          <span class="tag-pill" data-tag="Sleep quality" onclick="toggleTag(this)">Sleep quality</span>
+          <span class="tag-pill" data-tag="Medication" onclick="toggleTag(this)">Medication</span>
+          <span class="tag-pill" data-tag="Exercise" onclick="toggleTag(this)">Exercise</span>
+          <span class="tag-pill" data-tag="Nutrition" onclick="toggleTag(this)">Nutrition</span>
+          <span class="tag-pill" data-tag="Stress" onclick="toggleTag(this)">Stress</span>
+          <span class="tag-pill" data-tag="Social energy" onclick="toggleTag(this)">Social energy</span>
+          <span class="tag-pill" data-tag="Hyperfocus" onclick="toggleTag(this)">Hyperfocus</span>
+          <span class="tag-pill" data-tag="Overwhelm" onclick="toggleTag(this)">Overwhelm</span>
+          <span class="tag-pill" data-tag="RSD" onclick="toggleTag(this)">RSD</span>
+          <span class="tag-pill" data-tag="Sensory" onclick="toggleTag(this)">Sensory</span>
+          <span class="tag-pill" data-tag="Hormones" onclick="toggleTag(this)">Hormones</span>
+          <span class="tag-pill" data-tag="Weather" onclick="toggleTag(this)">Weather</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Daily Reflection</div>
+        <textarea id="reflection" placeholder="What helped me focus today? What made things harder? What do I want tomorrow to feel like?"></textarea>
+      </div>
+      <div class="card sage-card">
+        <div class="card-label">Gratitude — 3 small things</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input class="caveat-input" data-grat="0" placeholder="I'm grateful for...">
+          <input class="caveat-input" data-grat="1" placeholder="Something small that went right...">
+          <input class="caveat-input" data-grat="2" placeholder="A person I appreciate...">
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ─── FOCUS TIMER ─── -->
+<main id="focus" class="page">
+  <div class="page-hero">
+    <h1>Focus Timer</h1>
+    <p>Short bursts. Real rest. ADHD-friendly Pomodoro.</p>
+  </div>
+  <div class="two-col">
+    <div class="card timer-card">
+      <div class="timer-modes">
+        <button class="mode-btn active" onclick="setMode(25,'Focus',this)">Focus 25</button>
+        <button class="mode-btn" onclick="setMode(5,'Short Break',this)">Break 5</button>
+        <button class="mode-btn" onclick="setMode(15,'Long Break',this)">Long 15</button>
+      </div>
+      <div class="ring-wrap">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="80"/>
+          <circle class="ring-fg" id="ring" cx="90" cy="90" r="80" stroke-dasharray="502.7" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-center">
+          <div class="timer-time" id="timer-disp">25:00</div>
+          <div class="timer-mode-lbl" id="timer-mode-lbl">Focus</div>
+        </div>
+      </div>
+      <div class="timer-btns">
+        <button class="t-btn t-start" id="t-start" onclick="toggleTimer()">Start</button>
+        <button class="t-btn t-reset" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-label">Right now I'm working on</div>
+        <input type="text" id="focus-task" placeholder="Name this focus session...">
+      </div>
+      <div class="card">
+        <div class="card-label">Session Log</div>
+        <div id="session-log"><div class="no-sessions">Start your first focus session to see it logged here.</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ─── PROOF BOARD ─── -->
+<main id="proof" class="page">
+  <div class="proof-hero">
+    <h1>Look at what you've built 🌟</h1>
+    <p>Every check, every habit, every session — counted here.</p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num sn-teal" id="s-tasks">0</div><div class="stat-lbl">Tasks Done</div></div>
+    <div class="stat-card"><div class="stat-num sn-peach" id="s-focus">0</div><div class="stat-lbl">Focus Sessions</div></div>
+    <div class="stat-card"><div class="stat-num sn-amber" id="s-habits">0</div><div class="stat-lbl">Habits Checked</div></div>
+    <div class="stat-card"><div class="stat-num sn-lav" id="s-streak">1</div><div class="stat-lbl">Day Streak</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Weekly Completion</div>
+    <div class="week-bar-wrap">
+      <div class="week-bar-info"><span class="week-bar-lbl">Progress toward your goals this week</span><span class="week-bar-val" id="w-pct">0%</span></div>
+      <div class="week-bar"><div class="week-bar-fill" id="w-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Your Wins Feed</div>
+    <div class="feed-list" id="feed-list">
+      <div class="empty-feed">Your wins will appear here as you complete tasks, habits, and focus sessions.<br>Every action creates proof that you're showing up.</div>
+    </div>
+    <button class="share-btn" onclick="shareProof()">📸 Screenshot your progress to share</button>
+    <button class="danger-btn" onclick="resetAllData()">↺ Reset all data (start fresh)</button>
+  </div>
+</main>
+
+<footer class="app-footer">
+  <strong>ADHD LIFE PLANNER</strong> · A product of <strong>PRODUCTIVITYENGINECO</strong> · Made with care for neurodivergent minds · Your data stays private on your device
+</footer>
+
+<script>
+// ──────────────────────────────────────────
+//  ADHD Life Planner — by PRODUCTIVITYENGINECO
+//  All data persists locally via localStorage.
+// ──────────────────────────────────────────
+
+var STORAGE_KEY = 'pec_adhd_planner_v1';
+
+// ── DEFAULT STATE ──
+function defaultState() {
+  return {
+    tasks:0, focus:0, habits:0, streak:1, feed:[],
+    welcomed:false,
+    activeTab:'start',
+    daily:{
+      date:'', intention:'', mood:-1, water:0,
+      priorities:[{text:'',done:false},{text:'',done:false},{text:'',done:false}],
+      timeBlocks:{},
+      brainDump:'',
+      wins:['','','']
+    },
+    habits:[
+      {name:'Medication',days:[0,0,0,0,0,0,0]},
+      {name:'Move / exercise',days:[0,0,0,0,0,0,0]},
+      {name:'8 glasses water',days:[0,0,0,0,0,0,0]},
+      {name:'Sleep before 11pm',days:[0,0,0,0,0,0,0]},
+      {name:'Phone-free morning',days:[0,0,0,0,0,0,0]}
+    ],
+    moodPage:{ mood:'', energy:5, tags:[], reflection:'', gratitude:['','',''] },
+    focusPage:{ task:'', sessions:[] },
+    lastVisit:null
+  };
+}
+
+var S = loadState();
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) {
+      var parsed = JSON.parse(raw);
+      var def = defaultState();
+      // shallow-merge any missing keys (for forward compat)
+      for(var k in def){ if(!(k in parsed)) parsed[k]=def[k]; }
+      return parsed;
+    }
+  } catch(e){ console.warn('Could not load saved data:', e); }
+  return defaultState();
+}
+
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); }
+  catch(e){ console.warn('Could not save:', e); }
+}
+
+// ── WELCOME MODAL ──
+function openWelcome(){ document.getElementById('welcome-modal').classList.add('show'); }
+function closeWelcome(){ document.getElementById('welcome-modal').classList.remove('show'); S.welcomed=true; save(); }
+if(!S.welcomed){ document.getElementById('welcome-modal').classList.add('show'); }
+
+// ── TABS ──
+function switchTab(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  S.activeTab=id; save();
+}
+// Restore active tab
+(function(){
+  if(S.activeTab && S.activeTab!=='start'){
+    var tab = document.querySelector('.nav-tab[data-tab="'+S.activeTab+'"]');
+    if(tab) tab.click();
+  }
+})();
+
+// ── DATE ──
+(function() {
+  var d = new Date();
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var str = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+  document.getElementById('header-date').textContent = str;
+  var df = document.getElementById('date-field');
+  if(df){
+    df.value = S.daily.date || str;
+    df.addEventListener('input', function(){ S.daily.date=this.value; save(); });
+  }
+  // Streak: increment if first visit on a new day
+  var today = d.toDateString();
+  if(S.lastVisit && S.lastVisit !== today){
+    var last = new Date(S.lastVisit);
+    var diff = Math.round((d - last)/86400000);
+    if(diff === 1) S.streak = (S.streak||1)+1;
+    else if(diff > 1) S.streak = 1;
+  }
+  S.lastVisit = today;
+  save();
+})();
+
+// ── INTENTION ──
+(function(){
+  var el=document.getElementById('intention-field');
+  el.value=S.daily.intention||'';
+  el.addEventListener('input', function(){ S.daily.intention=this.value; save(); });
+})();
+
+// ── BRAIN DUMP ──
+(function(){
+  var el=document.getElementById('brain-dump');
+  el.value=S.daily.brainDump||'';
+  el.addEventListener('input', function(){ S.daily.brainDump=this.value; save(); });
+})();
+
+// ── WINS ──
+document.querySelectorAll('[data-win]').forEach(function(el){
+  var idx=+el.getAttribute('data-win');
+  el.value=S.daily.wins[idx]||'';
+  el.addEventListener('input', function(){ S.daily.wins[idx]=this.value; save(); });
+});
+
+// ── WATER DROPS ──
+(function() {
+  var dropsEl = document.getElementById('drops');
+  function renderDrops(){
+    dropsEl.innerHTML='';
+    for(var i=0;i<8;i++) {
+      var d = document.createElement('span');
+      d.className = 'drop' + (i<S.daily.water ? ' filled' : '');
+      d.innerHTML = '<svg width="22" height="28" viewBox="0 0 22 28"><path d="M11 2C11 2 2 13 2 19a9 9 0 0018 0C20 13 11 2 11 2z" fill="#E8E4DC"/></svg>';
+      d.onclick = (function(idx) {
+        return function() {
+          // toggle fill up to idx — clicking on the filled top one un-fills it
+          var newCount = (S.daily.water === idx+1) ? idx : idx+1;
+          S.daily.water = newCount;
+          save(); renderDrops();
+          if(newCount===8) { confetti(this); logWin('💧 Full hydration — 8 glasses done!','#6BA08A'); }
+        };
+      })(i);
+      dropsEl.appendChild(d);
+    }
+    document.getElementById('water-count').textContent = S.daily.water + ' / 8 glasses';
+  }
+  renderDrops();
+})();
+
+// ── QUICK MOOD ──
+function qMood(el) {
+  var idx=+el.getAttribute('data-mood');
+  document.querySelectorAll('.mood-q-btn').forEach(b => b.classList.remove('sel'));
+  if(S.daily.mood===idx){ S.daily.mood=-1; }
+  else { el.classList.add('sel'); S.daily.mood=idx; }
+  save();
+}
+if(S.daily.mood>=0){
+  var b=document.querySelector('.mood-q-btn[data-mood="'+S.daily.mood+'"]');
+  if(b) b.classList.add('sel');
+}
+
+// ── PRIORITIES ──
+document.querySelectorAll('[data-pri-text]').forEach(function(el){
+  var idx=+el.getAttribute('data-pri-text');
+  el.value=S.daily.priorities[idx].text||'';
+  if(S.daily.priorities[idx].done) el.classList.add('done');
+  el.addEventListener('input', function(){ S.daily.priorities[idx].text=this.value; save(); });
+});
+document.querySelectorAll('[data-pri]').forEach(function(el){
+  var idx=+el.getAttribute('data-pri');
+  if(S.daily.priorities[idx].done) el.classList.add('done');
+});
+function togglePriority(el) {
+  var idx=+el.getAttribute('data-pri');
+  var was = S.daily.priorities[idx].done;
+  S.daily.priorities[idx].done = !was;
+  el.classList.toggle('done');
+  var inp = el.nextElementSibling;
+  if(inp) inp.classList.toggle('done', !was);
+  if(!was) {
+    S.tasks = (S.tasks||0)+1;
+    confetti(el);
+    var label = inp && inp.value ? inp.value : 'Priority task completed';
+    logWin('✓ ' + label, '#6BA08A');
+  } else {
+    S.tasks = Math.max(0,(S.tasks||0)-1);
+  }
+  save(); updateStats();
+}
+
+// ── TIME BLOCKS ──
+(function() {
+  var times=[['6 AM',false,false],['7 AM',false,false],['8 AM',false,false],['9 AM',true,false],['10 AM',true,false],['11 AM',true,false],['12 PM',false,true],['1 PM',false,false],['2 PM',true,false],['3 PM',true,false],['4 PM',false,false],['5 PM',false,true],['6 PM',false,false],['7 PM',false,false],['8 PM',false,false]];
+  var grid = document.getElementById('time-grid');
+  times.forEach(function(t,i) {
+    var key='t'+i;
+    var lbl = document.createElement('div'); lbl.className='time-label'; lbl.textContent=t[0];
+    var blk = document.createElement('div'); blk.className='time-block'+(t[1]?' focus-block':t[2]?' break-block':'');
+    var inp = document.createElement('input');
+    inp.placeholder = t[1]?'Deep focus work':t[2]?'Break & recharge':'';
+    inp.value = S.daily.timeBlocks[key]||'';
+    inp.addEventListener('input', function(){ S.daily.timeBlocks[key]=this.value; save(); });
+    if(t[1]) { var tag=document.createElement('span'); tag.className='block-tag bt-focus'; tag.textContent='Focus'; blk.appendChild(tag); }
+    if(t[2]) { var tag2=document.createElement('span'); tag2.className='block-tag bt-break'; tag2.textContent='Break'; blk.appendChild(tag2); }
+    blk.appendChild(inp); grid.appendChild(lbl); grid.appendChild(blk);
+  });
+})();
+
+// ── QUICK START ──
+var qsRunning=false, qsInterval=null, qsSecs=300;
+function checkQs() {
+  var v = document.getElementById('qs-input').value.trim();
+  document.getElementById('qs-btn').disabled = !v;
+}
+function startQs() {
+  if(qsRunning) return;
+  qsRunning=true;
+  document.getElementById('qs-timer').style.display='block';
+  document.getElementById('qs-btn').textContent='Timer running... stay with it 💪';
+  document.getElementById('qs-btn').disabled=true;
+  qsInterval = setInterval(function() {
+    if(qsSecs>0) {
+      qsSecs--;
+      var m=Math.floor(qsSecs/60), s=qsSecs%60;
+      document.getElementById('qs-time').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    } else {
+      clearInterval(qsInterval); qsRunning=false;
+      var task = document.getElementById('qs-input').value || 'First 5-minute task';
+      S.tasks=(S.tasks||0)+1;
+      logWin('⚡ Quick win: ' + task, '#CE8470');
+      updateStats(); save();
+      confetti(document.getElementById('qs-timer'));
+      var win = document.getElementById('qs-win'); win.style.display='block'; win.classList.add('show');
+      document.getElementById('qs-btn').textContent='See my proof →';
+      document.getElementById('qs-btn').disabled=false;
+      document.getElementById('qs-btn').onclick=function(){document.querySelector('.nav-tab[data-tab="proof"]').click()};
+    }
+  },1000);
+}
+
+// ── HABITS ──
+function renderHabits() {
+  var list = document.getElementById('habit-list');
+  list.innerHTML = '';
+  S.habits.forEach(function(h,hi) {
+    var row = document.createElement('div'); row.className='habit-row';
+    var nameCell = document.createElement('div');
+    var nameIn = document.createElement('input'); nameIn.className='habit-name-input'; nameIn.value=h.name; nameIn.placeholder='Habit name';
+    nameIn.onchange = function(){S.habits[hi].name=this.value; save(); renderProgress();};
+    nameCell.appendChild(nameIn); row.appendChild(nameCell);
+    for(var d=0;d<7;d++) {
+      var cell = document.createElement('div'); cell.className='h-cell';
+      var box = document.createElement('div'); box.className='h-check'+(h.days[d]?' done':'');
+      box.onclick = (function(hIdx,dIdx,b) {
+        return function() {
+          var was = S.habits[hIdx].days[dIdx];
+          S.habits[hIdx].days[dIdx] = was?0:1;
+          b.classList.toggle('done');
+          if(!was) { S.habits_count=(S.habits_count||0)+1; confetti(b); logWin('✓ '+S.habits[hIdx].name+' — day '+(dIdx+1),'#C49550'); }
+          else S.habits_count=Math.max(0,(S.habits_count||0)-1);
+          save(); updateStats(); renderProgress();
+        };
+      })(hi,d,box);
+      cell.appendChild(box); row.appendChild(cell);
+    }
+    list.appendChild(row);
+    var barRow=document.createElement('div'); barRow.style='display:grid;grid-template-columns:130px 1fr;gap:5px;margin-bottom:14px;align-items:center';
+    var done=h.days.reduce(function(a,b){return a+b},0);
+    var pct=Math.round((done/7)*100);
+    barRow.innerHTML='<div></div><div><div class="habit-streak-bar"><div class="habit-streak-fill" style="width:'+pct+'%"></div></div><div class="habit-streak-lbl">'+done+'/7 days</div></div>';
+    list.appendChild(barRow);
+  });
+  renderProgress();
+}
+function addHabit() {
+  S.habits.push({name:'New habit',days:[0,0,0,0,0,0,0]});
+  save(); renderHabits();
+}
+function renderProgress() {
+  var prog = document.getElementById('habit-progress');
+  prog.innerHTML = '';
+  S.habits.forEach(function(h) {
+    var done=h.days.reduce(function(a,b){return a+b},0);
+    var pct=Math.round((done/7)*100);
+    var wrap=document.createElement('div'); wrap.style.marginBottom='12px';
+    var top=document.createElement('div'); top.style='display:flex;justify-content:space-between;margin-bottom:5px';
+    top.innerHTML='<span style="font-size:13px;font-weight:700;color:var(--text)">'+h.name+'</span><span style="font-size:12px;color:var(--text-soft);font-weight:700">'+done+'/7 days — '+pct+'%</span>';
+    var bar=document.createElement('div'); bar.className='week-bar';
+    var fill=document.createElement('div'); fill.className='week-bar-fill'; fill.style.width=pct+'%';
+    bar.appendChild(fill); wrap.appendChild(top); wrap.appendChild(bar); prog.appendChild(wrap);
+  });
+}
+// Restore habits count from S.habits if not present
+if(typeof S.habits_count==='undefined'){
+  S.habits_count = S.habits.reduce(function(a,h){return a + h.days.reduce(function(x,y){return x+y},0)},0);
+}
+renderHabits();
+
+// ── MOOD PAGE ──
+function selMood(el,name) {
+  document.querySelectorAll('.mood-opt').forEach(o=>o.classList.remove('active'));
+  if(S.moodPage.mood===name){ S.moodPage.mood=''; }
+  else { el.classList.add('active'); S.moodPage.mood=name; }
+  save();
+}
+if(S.moodPage.mood){
+  var m=document.querySelector('.mood-opt[data-mood="'+S.moodPage.mood+'"]');
+  if(m) m.classList.add('active');
+}
+function setEnergy(e) {
+  var rect=e.currentTarget.getBoundingClientRect();
+  var pct=Math.min(1,Math.max(0,(e.clientX-rect.left)/rect.width));
+  var val=Math.round(pct*10);
+  document.getElementById('energy-fill').style.width=(val*10)+'%';
+  document.getElementById('energy-val').textContent=val;
+  S.moodPage.energy=val; save();
+}
+// Restore energy
+document.getElementById('energy-fill').style.width=((S.moodPage.energy||5)*10)+'%';
+document.getElementById('energy-val').textContent=S.moodPage.energy||5;
+
+function toggleTag(el) {
+  var name=el.getAttribute('data-tag');
+  el.classList.toggle('on');
+  var idx=S.moodPage.tags.indexOf(name);
+  if(idx>=0) S.moodPage.tags.splice(idx,1); else S.moodPage.tags.push(name);
+  save();
+}
+S.moodPage.tags.forEach(function(n){
+  var el=document.querySelector('.tag-pill[data-tag="'+n+'"]');
+  if(el) el.classList.add('on');
+});
+
+// Reflection + gratitude
+(function(){
+  var r=document.getElementById('reflection');
+  r.value=S.moodPage.reflection||'';
+  r.addEventListener('input', function(){ S.moodPage.reflection=this.value; save(); });
+})();
+document.querySelectorAll('[data-grat]').forEach(function(el){
+  var i=+el.getAttribute('data-grat');
+  el.value=S.moodPage.gratitude[i]||'';
+  el.addEventListener('input', function(){ S.moodPage.gratitude[i]=this.value; save(); });
+});
+
+// ── FOCUS TIMER ──
+var tSecs=1500, tTotal=1500, tMode='Focus', tRunning=false, tInterval=null;
+function setMode(mins,mode,el) {
+  clearInterval(tInterval); tRunning=false; document.getElementById('t-start').textContent='Start';
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active');
+  tSecs=mins*60; tTotal=mins*60; tMode=mode;
+  document.getElementById('timer-mode-lbl').textContent=mode;
+  updateTimerUI();
+}
+function updateTimerUI() {
+  var m=Math.floor(tSecs/60), s=tSecs%60;
+  document.getElementById('timer-disp').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  document.getElementById('ring').style.strokeDashoffset=502.7*(1-(tSecs/tTotal));
+}
+function toggleTimer() {
+  if(tRunning) { clearInterval(tInterval); tRunning=false; document.getElementById('t-start').textContent='Resume'; }
+  else {
+    tRunning=true; document.getElementById('t-start').textContent='Pause';
+    tInterval=setInterval(function(){
+      if(tSecs>0) { tSecs--; updateTimerUI(); }
+      else {
+        clearInterval(tInterval); tRunning=false; tSecs=tTotal; document.getElementById('t-start').textContent='Start'; updateTimerUI();
+        if(tMode==='Focus') {
+          S.focus=(S.focus||0)+1;
+          var taskName = (document.getElementById('focus-task').value||'').trim();
+          var now=new Date(); var h=now.getHours(),m=now.getMinutes();
+          var t=((h%12)||12)+':'+(m<10?'0':'')+m+(h>=12?' pm':' am');
+          var label = taskName ? taskName : 'Deep work';
+          S.focusPage.sessions.unshift({label:label, time:t, mins:Math.round(tTotal/60)});
+          renderSessions();
+          confetti(document.getElementById('timer-disp'));
+          logWin('⏱ Focus session complete — '+Math.round(tTotal/60)+' mins'+(taskName?' ('+taskName+')':''),'#5B9BAA');
+          updateStats(); save();
+        }
+      }
+    },1000);
+  }
+}
+function resetTimer() { clearInterval(tInterval); tRunning=false; tSecs=tTotal; document.getElementById('t-start').textContent='Start'; updateTimerUI(); }
+function renderSessions(){
+  var log=document.getElementById('session-log');
+  if(!S.focusPage.sessions.length){ log.innerHTML='<div class="no-sessions">Start your first focus session to see it logged here.</div>'; return; }
+  log.innerHTML='';
+  S.focusPage.sessions.slice(0,10).forEach(function(sess,i){
+    var item=document.createElement('div'); item.className='session-item';
+    item.innerHTML='<div class="session-dot"></div><div class="session-txt">'+(sess.label||'Deep work')+' — '+(sess.mins||25)+' min ✓</div><div class="session-time">'+sess.time+'</div>';
+    log.appendChild(item);
+  });
+}
+renderSessions();
+
+// Focus task field persistence
+(function(){
+  var el=document.getElementById('focus-task');
+  el.value=S.focusPage.task||'';
+  el.addEventListener('input', function(){ S.focusPage.task=this.value; save(); });
+})();
+
+// ── PROOF / STATS ──
+function logWin(text,color) {
+  var now=new Date(); var h=now.getHours(),m=now.getMinutes();
+  var t=((h%12)||12)+':'+(m<10?'0':'')+m+(h>=12?' pm':' am');
+  S.feed.unshift({text:text,color:color,time:t});
+  if(S.feed.length>50) S.feed = S.feed.slice(0,50);
+  renderFeed(); updateStats(); save();
+}
+function renderFeed() {
+  var el=document.getElementById('feed-list');
+  if(!S.feed.length){el.innerHTML='<div class="empty-feed">Your wins will appear here as you complete tasks, habits, and focus sessions.<br>Every action creates proof that you\'re showing up.</div>';return;}
+  el.innerHTML='';
+  S.feed.slice(0,20).forEach(function(it){
+    var div=document.createElement('div'); div.className='feed-item';
+    div.innerHTML='<div class="feed-dot" style="background:'+it.color+'"></div><div class="feed-text">'+it.text+'</div><div class="feed-time">'+it.time+'</div>';
+    el.appendChild(div);
+  });
+}
+function updateStats() {
+  document.getElementById('s-tasks').textContent=S.tasks||0;
+  document.getElementById('s-focus').textContent=S.focus||0;
+  document.getElementById('s-habits').textContent=S.habits_count||0;
+  document.getElementById('s-streak').textContent=S.streak||1;
+  var total=(S.tasks||0)+(S.habits_count||0)+(S.focus||0);
+  var pct=Math.min(100,Math.round(total*4));
+  document.getElementById('w-pct').textContent=pct+'%';
+  document.getElementById('w-fill').style.width=pct+'%';
+}
+function shareProof() { alert('Take a screenshot of this page to share your progress! Post it to Instagram, TikTok, or your ADHD community.'); }
+function resetAllData(){
+  if(confirm('Reset everything? This will clear all your tasks, habits, mood logs, and progress. This cannot be undone.')){
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+renderFeed(); updateStats();
+
+// ── CONFETTI ──
+function confetti(el) {
+  var colors=['#6BA08A','#8B80BF','#CE8470','#C49550','#5B9BAA','#A8CBBF'];
+  var rect = el && typeof el.getBoundingClientRect==='function' ? el.getBoundingClientRect() : {left:window.innerWidth/2,top:window.innerHeight/2,width:0,height:0};
+  var cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  for(var i=0;i<18;i++){
+    var piece=document.createElement('div'); piece.className='confetti-piece';
+    var size=Math.random()*9+5;
+    piece.style.cssText='width:'+size+'px;height:'+size+'px;background:'+colors[Math.floor(Math.random()*colors.length)]+';left:'+(cx+Math.random()*80-40)+'px;top:'+cy+'px;animation-duration:'+(1+Math.random()*.6)+'s;animation-delay:'+Math.random()*0.15+'s;border-radius:'+(Math.random()>0.5?'50%':'3px');
+    document.body.appendChild(piece);
+    setTimeout(function(p){if(p.parentNode)p.parentNode.removeChild(p);},1700,piece);
+  }
+}
+</script>
+</body>
+</html>
